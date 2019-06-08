@@ -3,16 +3,19 @@ function buildMetadata(sample) {
         // @TODO: Complete the following function that builds the metadata panel
 
     // Use `d3.json` to fetch the metadata for a sample
-    // Use d3 to select the panel with id of `#sample-metadata`
-    var panelData = d3.select("#sample-metadata")
-        // Use `.html("") to clear any existing metadata
-    panelData.html("")
-        // Use `Object.entries` to add each key and value pair to the panel
-        // Hint: Inside the loop, you will need to use d3 to append new
-        // tags for each key-value in the metadata.
-    Object.entries(sample).forEach(function([key, value]) {
-        var row = panelData.append("p")
-        row.text(`${key}:${value}`)
+    d3.json(metadataLink).then(function(sample) {
+
+        // Use d3 to select the panel with id of `#sample-metadata`
+        var panelData = d3.select("#sample-metadata")
+            // Use `.html("") to clear any existing metadata
+        panelData.html("")
+            // Use `Object.entries` to add each key and value pair to the panel
+            // Hint: Inside the loop, you will need to use d3 to append new
+            // tags for each key-value in the metadata.
+        Object.entries(sample).forEach(function([key, value]) {
+            var row = panelData.append("p")
+            row.text(`${key}:${value}`)
+        })
     })
 }
 
@@ -49,24 +52,24 @@ function buildCharts(sample) {
             xaxis: { title: "OTU ID" },
         }
 
-        plotly.newPlot('bubble', data, layout)
+        Plotly.newPlot('bubble', data, layout)
 
         // @TODO: Build a Pie Chart
         // HINT: You will need to use slice() to grab the top 10 sample_values,
         // otu_ids, and labels (10 each).
-        d3.json(url).then(function(data) {
-            var pie_values = data.sample_values.slice(0, 10)
-            var pie_labels = data.otu_ids.slice(0, 10)
-            var pie_hover = data.otu_labels.slice(0, 10)
+        d3.json(chartLink).then(function(data) {
+            var pVals = data.sample_values.slice(0, 10)
+            var pLabs = data.otu_ids.slice(0, 10)
+            var pHov = data.otu_labels.slice(0, 10)
 
             var data = [{
-                values: pie_values,
-                labels: pie_labels,
-                hovertext: pie_hover,
+                values: pVals,
+                labels: pLabs,
+                hovertext: pHov,
                 type: 'pie'
             }]
 
-            plotly.newPlot('pie', data)
+            Plotly.newPlot('pie', data)
         })
 
 
